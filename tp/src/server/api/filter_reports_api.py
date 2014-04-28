@@ -4,16 +4,16 @@ import simplejson as json
 
 import logging
 import logging.config
-from server.handlers import BaseHandler
-from db.client import *
-from errorz.error_messages import GenericResults
-from errorz.status_codes import GenericCodes
-from reports.filter_reports import *
-from server.hierarchy.manager import get_current_customer_name
-from server.hierarchy.decorators import authenticated_request, permission_check
-from server.hierarchy.permissions import Permission
-from utils.common import *
-from server.hierarchy.decorators import convert_json_to_arguments
+from vFense.core.api.base import BaseHandler
+from vFense.db.client import *
+from vFense.errorz.error_messages import GenericResults
+from vFense.errorz.status_codes import GenericCodes
+from vFense.reports.filter_reports import *
+from vFense.server.hierarchy.manager import get_current_customer_name
+from vFense.server.hierarchy.decorators import authenticated_request, permission_check
+from vFense.server.hierarchy.permissions import Permission
+from vFense.utils.common import *
+from vFense.server.hierarchy.decorators import convert_json_to_arguments
 from datetime import datetime
 
 from jsonpickle import encode
