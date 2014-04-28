@@ -19,7 +19,7 @@ class AgentsOsDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -48,7 +48,7 @@ class AgentsHardwareDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -79,7 +79,7 @@ class AgentsCPUDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -111,7 +111,7 @@ class AgentsMemoryDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -143,7 +143,7 @@ class AgentsDiskDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -175,7 +175,7 @@ class AgentsNetworkDetailsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method

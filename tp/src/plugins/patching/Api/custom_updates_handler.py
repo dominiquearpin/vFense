@@ -6,6 +6,7 @@ import logging.config
 
 from vFense.errorz.error_messages import GenericResults, PackageResults
 
+from vFense.core._constants import CommonKeys
 from vFense.core.permissions._constants import *
 from vFense.core.permissions.decorators import check_permissions
 
@@ -137,9 +138,9 @@ class AgentIdCustomAppsHandler(BaseHandler):
         sort_by = self.get_argument('sort_by', CustomAppsKey.Name)
         hidden = self.get_argument('hidden', 'false')
         if hidden == 'false':
-            hidden = NO
+            hidden = CommonKeys.NO
         else:
-            hidden = YES
+            hidden = CommonKeys.YES
         uri = self.request.uri
         method = self.request.method
         patches = (
@@ -969,9 +970,9 @@ class CustomAppsHandler(BaseHandler):
         sort_by = self.get_argument('sort_by', CustomAppsKey.Name)
         hidden = self.get_argument('hidden', 'false')
         if hidden == 'false':
-            hidden = NO
+            hidden = CommonKeys.NO
         else:
-            hidden = YES
+            hidden = CommonKeys.YES
         uri = self.request.uri
         method = self.request.method
         patches = (

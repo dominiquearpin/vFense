@@ -156,8 +156,8 @@ class PatchingOperationResults(OperationResults):
 
         for apps in self.apps_to_delete:
             delete_app_from_agent(
-                apps[NAME],
-                apps[VERSION],
+                apps[CommonAppKeys.NAME],
+                apps[CommonAppKeys.VERSION],
                 self.agent_id
             )
 

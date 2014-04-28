@@ -23,7 +23,7 @@ class ScheduleListerHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -57,7 +57,7 @@ class ScheduleAppDetailHandler(BaseHandler):
     def get(self, jobname):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -89,7 +89,7 @@ class ScheduleAppDetailHandler(BaseHandler):
     def delete(self, jobname):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -127,7 +127,7 @@ class SchedulerYearlyRecurrentJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri=self.request.uri
         method=self.request.method
@@ -182,7 +182,7 @@ class SchedulerMonthlyRecurrentJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -240,7 +240,7 @@ class SchedulerDailyRecurrentJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -295,7 +295,7 @@ class SchedulerWeeklyRecurrentJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -350,7 +350,7 @@ class SchedulerDateBasedJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -403,7 +403,7 @@ class SchedulerCustomRecurrentJobHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method

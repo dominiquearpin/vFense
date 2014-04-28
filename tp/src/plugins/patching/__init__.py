@@ -5,8 +5,8 @@ class AppCollections():
     CustomAppsPerAgent = 'custom_apps_per_agent'
     SupportedApps = 'supported_apps'
     SupportedAppsPerAgent = 'supported_apps_per_agent'
-    AgentApps = 'agent_apps'
-    AgentAppsPerAgent = 'agent_apps_per_agent'
+    vFenseApps = 'vfense_apps'
+    vFenseAppsPerAgent = 'vfense_apps_per_agent'
 
 
 class DownloadCollections():
@@ -16,62 +16,7 @@ class DownloadCollections():
 
 class FileCollections():
     Files = 'files'
-
-
-AppsCollection = 'unique_applications'
-AppsPerAgentCollection = 'apps_per_agent'
-CustomAppsCollection = 'custom_apps'
-CustomAppsPerAgentCollection = 'custom_apps_per_agent'
-SupportedAppsCollection = 'supported_apps'
-SupportedAppsPerAgentCollection = 'supported_apps_per_agent'
-AgentAppsCollection = 'agent_apps'
-AgentAppsPerAgentCollection = 'agent_apps_per_agent'
-LatestDownloadedSupportedCollection = 'latest_downloaded_supported'
-LatestDownloadedAgentCollection = 'latest_downloaded_agent'
-FilesCollection = 'files'
-
-ALL_APP_COLLECTIONS = ('apps', 'custom_apps', 'supported_apps', 'agent_apps')
-Id = 'id'
-PerAgentCollection = '_per_agent'
-PerTagCollection = '_per_tag'
-AGENTID = 'agent_id'
-AgentIdAndTagId = 'agentid_and_tagid'
-COUNT = 'count'
-AGENT_COUNT = 'agent_count'
-AGENTS = 'agents'
-STATUS = 'status'
-NAME = 'name'
-VERSION = 'version'
-INSTALLED = 'installed'
-AVAILABLE = 'available'
-SOFTWAREINVENTORY = 'Software Inventory'
-OS = 'OS'
-CUSTOM = 'Custom'
-SUPPORTED = 'Supported'
-PENDING = 'pending'
-AGENT_UPDATES = 'Agent Updates'
-APP_ID = 'app_id'
-APP_NAME = 'app_name'
-APP_VERSION = 'app_version'
-APP_URIS = 'app_uris'
-PKG_NAME = 'file_name'
-PKG_SIZE = 'file_size'
-PKG_URI = 'file_uri'
-FILE_URIS = 'file_uris'
-PKG_HASH = 'file_hash'
-PKG_URIS = 'uris'
-PKG_FILEDATA = 'file_data'
-PKG_CLI_OPTIONS = 'cli_options'
-YES = 'yes'
-NO = 'no'
-ValidPackageStatuses = (INSTALLED, AVAILABLE, PENDING)
-ValidHiddenVals = (YES, NO)
-
-CRITICAL = 'Critical'
-OPTIONAL = 'Optional'
-RECOMMENDED = 'Recommended'
-ValidRvSeverities = (CRITICAL, RECOMMENDED, OPTIONAL)
-BASIC_RV_STATS = 'basic_rv_stats'
+    FileServers = 'file_servers'
 
 
 class FilesKey():
@@ -88,6 +33,15 @@ class FilesKey():
 class FilesIndexes():
     AppId = 'app_id'
     FilesDownloadStatus = 'files_download_status'
+
+class FileServerKeys():
+    FileServerName = 'file_server_name'
+    Customers = 'customers'
+    Address = 'address'
+
+
+class FileServerIndexes():
+    CustomerName = 'customer_name'
 
 
 class AppsKey():
@@ -370,3 +324,138 @@ class AgentAppsPerAgentIndexes():
     StatusAndCveId = 'status_and_cve_id'
     AppIdAndStatusAndCustomer = 'appid_and_status_and_customer'
 
+
+class vFenseAppsKey():
+    AppId = 'app_id'
+    Customers = 'customers'
+    RvId = 'rv_id'
+    Name = 'name'
+    Hidden = 'hidden'
+    Description = 'description'
+    ReleaseDate = 'release_date'
+    Kb = 'kb'
+    FileSize = 'file_size'
+    FileData = 'file_data'
+    FilesVerified = 'files_verified'
+    FilesDownloadStatus = 'files_download_status'
+    RebootRequired = 'reboot_required'
+    SupportUrl = 'support_url'
+    Version = 'version'
+    MajorVersion = 'major_version'
+    MinorVersion = 'minor_version'
+    OsCode = 'os_code'
+    RvSeverity = 'rv_severity'
+    VendorSeverity = 'vendor_severity'
+    VendorName = 'vendor_name'
+    CliOptions = 'cli_options'
+    Arch = 'arch'
+    VulnerabiltyId = 'vulnerability_id'
+    VulnerabiltyCategories = 'vulnerability_categories'
+    CveIds = 'cve_ids'
+
+
+
+class vFenseAppsIndexes():
+    AppId = 'app_id'
+    Name = 'name'
+    CustomerName = 'customer_name'
+    RvSeverity = 'rv_severity'
+    AppIdAndRvSeverity = 'appid_and_rv_severity'
+    NameAndVersion = 'name_and_version'
+    Customers = 'customers'
+    CustomerAndRvSeverity = 'customer_and_rvseverity'
+    AppIdAndRvSeverityAndHidden = 'appid_and_rv_severity_and_hidden'
+    AppIdAndHidden = 'appid_and_hidden'
+    CustomerAndHidden = 'customer_and_hidden'
+
+
+class vFenseAppsPerAgentKey():
+    Id = 'id'
+    AppId = 'app_id'
+    CustomerName = 'customer_name'
+    Dependencies = 'dependencies'
+    Name = 'name'
+    InstallDate = 'install_date'
+    Status = 'status'
+    Hidden = 'hidden'
+    AgentId = 'agent_id'
+    LastModifiedTime = 'last_modified_time'
+    Update = 'update'
+    CveIds = 'cve_ids'
+
+
+class vFenseAppsPerAgentIndexes():
+    AppId = 'app_id'
+    AgentId = 'agent_id'
+    Status = 'status'
+    CustomerName = 'customer_name'
+    AppIdAndStatus = 'appid_and_status'
+    AgentIdAndAppId = 'agentid_and_appid'
+    AppIdAndCustomer = 'appid_and_customer'
+    StatusAndAgentId = 'status_and_agentid'
+    StatusAndCustomer = 'status_and_customer'
+    StatusAndCveId = 'status_and_cve_id'
+    AppIdAndStatusAndCustomer = 'appid_and_status_and_customer'
+
+class DbCommonAppKeys():
+    AppId = 'app_id'
+    Customers = 'customers'
+    Name = 'name'
+    Hidden = 'hidden'
+    Description = 'description'
+    ReleaseDate = 'release_date'
+    RebootRequired = 'reboot_required'
+    Kb = 'kb'
+    FileSize = 'file_size'
+    FileData = 'file_data'
+    SupportUrl = 'support_url'
+    Version = 'version'
+    OsCode = 'os_code'
+    RvSeverity = 'rv_severity'
+    VendorSeverity = 'vendor_severity'
+    VendorName = 'vendor_name'
+    FilesDownloadStatus = 'files_download_status'
+    VulnerabilityId = 'vulnerability_id'
+    VulnerabilityCategories = 'vulnerability_categories'
+    CveIds = 'cve_ids'
+    CliOptions = 'cli_options'
+
+class DbCommonAppPerAgentKeys():
+    AppId = 'app_id'
+    Id = 'id'
+    InstallDate = 'install_date'
+    Status = 'status'
+    Hidden = 'hidden'
+    AgentId = 'agent_id'
+    CustomerName = 'customer_name'
+    Dependencies = 'dependencies'
+    LastModifiedTime = 'last_modified_time'
+    Update = 'update'
+    CveIds = 'cve_ids'
+
+class DbCommonAppIndexes():
+    AppId = 'app_id'
+    Name = 'name'
+    RvSeverity = 'rv_severity'
+    AppIdAndRvSeverity = 'appid_and_rv_severity'
+    NameAndVersion = 'name_and_version'
+    Customers = 'customers'
+    CustomerAndRvSeverity = 'customer_and_rvseverity'
+    AppIdAndRvSeverityAndHidden = 'appid_and_rv_severity_and_hidden'
+    AppIdAndHidden = 'appid_and_hidden'
+    CustomerAndHidden = 'customer_and_hidden'
+
+
+class DbCommonAppPerAgentIndexes():
+    AppId = 'app_id'
+    AgentId = 'agent_id'
+    Status = 'status'
+    CustomerName = 'customer_name'
+    AppIdAndStatus = 'appid_and_status'
+    AgentIdAndAppId = 'agentid_and_appid'
+    AppIdAndCustomer = 'appid_and_customer'
+    StatusAndAgentId = 'status_and_agentid'
+    AppIdStatusAndAgentId = 'appid_and_status_and_agentid'
+    StatusAndCustomer = 'status_and_customer'
+    StatusAndCveId = 'status_and_cve_id'
+    AppIdAndStatusAndCustomer = 'appid_and_status_and_customer'

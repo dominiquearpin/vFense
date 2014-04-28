@@ -24,7 +24,7 @@ class TagsHandler(BaseHandler):
     def get(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         query = self.get_argument('query', None)
         count = int(self.get_argument('count', 30))
@@ -53,7 +53,7 @@ class TagsHandler(BaseHandler):
     def post(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         tag_name = self.arguments.get('name', None)
         uri = self.request.uri
@@ -78,7 +78,7 @@ class TagsHandler(BaseHandler):
     def delete(self):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -116,7 +116,7 @@ class TagHandler(BaseHandler):
     def get(self, tag_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -132,7 +132,7 @@ class TagHandler(BaseHandler):
     def post(self, tag_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         uri = self.request.uri
         method = self.request.method
@@ -185,7 +185,7 @@ class TagHandler(BaseHandler):
     def put(self, tag_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         agent_id = self.arguments.get('agent_id', None)
         uri = self.request.uri
@@ -215,7 +215,7 @@ class TagHandler(BaseHandler):
     def delete(self, tag_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         agent_id = self.arguments.get('agent_id', None)
         uri = self.request.uri
@@ -245,7 +245,7 @@ class TagsAgentHandler(BaseHandler):
     def get(self, agent_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         name = self.get_argument('query', None)
         uri = self.request.uri
@@ -267,7 +267,7 @@ class TagsAgentHandler(BaseHandler):
     def put(self, agent_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         tag_name = self.arguments.get('tag_name', None)
         tag_id = self.arguments.get('tag_id', None)
@@ -339,7 +339,7 @@ class TagsAgentHandler(BaseHandler):
     def delete(self, agent_id):
         username = self.get_current_user()
         customer_name = (
-            get_user_property(active_user, UserKeys.CurrentCustomer)
+            get_user_property(username, UserKeys.CurrentCustomer)
         )
         tag_id = self.arguments.get('tag_id', None)
         uri = self.request.uri

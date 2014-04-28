@@ -17,7 +17,7 @@ def get_all_stats_by_appid(username, customer_name,
     try:
         apps = (
             r
-            .table(CustomAppsPerAgentCollection)
+            .table(AppCollections.CustomAppsPerAgent)
             .get_all(
                 [app_id, customer_name],
                 index=CustomAppsPerAgentIndexes.AppIdAndCustomer
@@ -77,7 +77,7 @@ def get_all_agents_per_appid(username, customer_name,
     try:
         agents = (
             r
-            .table(CustomAppsPerAgentCollection)
+            .table(AppCollections.CustomAppsPerAgent)
             .get_all(app_id, index=CustomAppsPerAgentKey.AppId)
             .eq_join(CustomAppsPerAgentKey.AgentId, r.table(AgentsCollection))
             .zip()
@@ -152,7 +152,7 @@ def get_all_stats_by_agentid(username, customer_name,
     try:
         apps = (
             r
-            .table(CustomAppsPerAgentCollection)
+            .table(AppCollections.CustomAppsPerAgent)
             .get_all(agent_id, index=CustomAppsPerAgentKey.AgentId)
             .group(CustomAppsPerAgentKey.Status)
             .count()

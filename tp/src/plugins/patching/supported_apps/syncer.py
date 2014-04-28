@@ -6,6 +6,7 @@ from vFense.core.agent import *
 from vFense.core.agent.agents import get_agents_info, get_agent_info 
 from vFense.errorz.status_codes import PackageCodes
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys
 from vFense.plugins.patching.rv_db_calls import insert_file_data,\
     build_agent_app_id, update_file_data,\
     get_apps_data, delete_all_in_table, insert_data_into_table
@@ -31,18 +32,18 @@ logger = logging.getLogger('rvapi')
 
 
 class IncomingSupportedOrAgentApps(object):
-    def __init__(self, table=SupportedAppsCollection):
+    def __init__(self, table=AppCollections.SupportedApps):
         self.table = table
-        if table == SupportedAppsCollection:
-            self.CurrentAppsCollection = SupportedAppsCollection
-            self.CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+        if table == AppCollections.SupportedApps:
+            self.CurrentAppsCollection = AppCollections.SupportedApps
+            self.CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
             self.CurrentAppsKey = SupportedAppsKey
             self.CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
             self.CurrentAppsPerAgentIndexes = SupportedAppsPerAgentIndexes
 
-        elif table == AgentAppsCollection:
-            self.CurrentAppsCollection = AgentAppsCollection
-            self.CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+        elif table == AppCollections.vFenseApps:
+            self.CurrentAppsCollection = AppCollections.vFenseApps
+            self.CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
             self.CurrentAppsKey = AgentAppsKey
             self.CurrentAppsPerAgentKey = AgentAppsPerAgentKey
             self.CurrentAppsPerAgentIndexes = AgentAppsPerAgentIndexes
@@ -102,7 +103,7 @@ class IncomingSupportedOrAgentApps(object):
                                     app_per_agent_props
                                 )
                             elif agent_has_app:
-                                app_per_agent_props[self.CurrentAppsPerAgentKey.Status] = INSTALLED
+                                app_per_agent_props[self.CurrentAppsPerAgentKey.Status] = CommonAppKeys.INSTALLED
                                 self.insert_app(app_per_agent_props)
             conn.close()
 
@@ -133,7 +134,7 @@ class IncomingSupportedOrAgentApps(object):
             for lower_app in lower_apps:
                 (
                     r
-                    .table(AppsPerAgentCollection)
+                    .table(AppCollections.AppsPerAgent)
                     .get(lower_app[AppsPerAgentKey.Id])
                     .delete()
                     .run(conn)
@@ -150,7 +151,7 @@ class IncomingSupportedOrAgentApps(object):
                 self.CurrentAppsPerAgentKey.CustomerName:
                 kwargs[AgentKey.CustomerName],
 
-                self.CurrentAppsPerAgentKey.Status: AVAILABLE,
+                self.CurrentAppsPerAgentKey.Status: CommonAppKeys.AVAILABLE,
 
                 self.CurrentAppsPerAgentKey.LastModifiedTime:
                 self.last_modified_time,
@@ -176,7 +177,7 @@ class IncomingSupportedOrAgentApps(object):
         try:
             app_name_exists= list(
                 r
-                .table(AppsCollection)
+                .table(AppCollections.UniqueApplications)
                 .get_all(
                     app_info[AppsKey.Name],
                     index=AppsIndexes.Name
@@ -198,11 +199,11 @@ class IncomingSupportedOrAgentApps(object):
 
     @db_create_close
     def lower_version_exists_of_app(self, app, app_info,
-                                    status=AVAILABLE, conn=None):
+                                    status=CommonAppKeys.AVAILABLE, conn=None):
         try:
             lower_version_exists = list(
                 r
-                .table(AppsCollection)
+                .table(AppCollections.UniqueApplications)
                 .get_all(
                     app_info[AppsKey.Name],
                     index=AppsIndexes.Name
@@ -216,7 +217,7 @@ class IncomingSupportedOrAgentApps(object):
                         app[AgentKey.AgentId],
                         app[AppsPerAgentKey.AppId],
                     ],
-                    r.table(AppsPerAgentCollection),
+                    r.table(AppCollections.AppsPerAgent),
                     index=AppsPerAgentIndexes.AgentId
                 )
                 .zip()
@@ -244,7 +245,7 @@ class IncomingSupportedOrAgentApps(object):
         try:
             agent_has_app = list(
                 r
-                .table(AppsPerAgentCollection)
+                .table(AppCollections.AppsPerAgent)
                 .get_all(
                     [
                         app[AppsPerAgentKey.AgentId],
@@ -261,16 +262,16 @@ class IncomingSupportedOrAgentApps(object):
         return(agent_has_app)
 
 
-def update_supported_and_agent_apps(json_data, table=SupportedAppsCollection):
+def update_supported_and_agent_apps(json_data, table=AppCollections.SupportedApps):
 
-    if table == SupportedAppsCollection:
+    if table == AppCollections.SupportedApps:
         CurrentAppsKey = SupportedAppsKey
-        LatestDownloadedCollection = LatestDownloadedSupportedCollection
+        LatestDownloadedCollection = DownloadCollections.LatestDownloadedSupported
         AppType = 'supported_apps'
 
-    elif table == AgentAppsCollection:
+    elif table == AppCollections.vFenseApps:
         CurrentAppsKey = AgentAppsKey
-        LatestDownloadedCollection = LatestDownloadedAgentCollection
+        LatestDownloadedCollection = DownloadCollections.LatestDownloadedAgent
         AppType = 'agent_apps'
     try:
         rv_q = Queue('downloader', connection=rq_pkg_pool)
@@ -341,11 +342,11 @@ def update_supported_and_agent_apps(json_data, table=SupportedAppsCollection):
 
 
 def get_agents_apps():
-    delete_all_in_table(table=LatestDownloadedAgentCollection)
+    delete_all_in_table(table=DownloadCollections.LatestDownloadedAgent)
     get_updater_data = requests.get(BASE_URL + GET_AGENT_UPDATES)
     if get_updater_data.status_code == 200:
         json_data = get_updater_data.json()
-        update_supported_and_agent_apps(json_data, AgentAppsCollection)
+        update_supported_and_agent_apps(json_data, AppCollections.vFenseApps)
     else:
         logger.error(
             'Failed to connect and download packages from TopPatch Updater server'
@@ -357,7 +358,7 @@ def get_supported_apps():
     get_updater_data = requests.get(BASE_URL + GET_SUPPORTED_UPDATES)
     if get_updater_data.status_code == 200:
         json_data = get_updater_data.json()
-        update_supported_and_agent_apps(json_data, SupportedAppsCollection)
+        update_supported_and_agent_apps(json_data, AppCollections.SupportedApps)
     else:
         logger.error(
             'Failed to connect and download packages from TopPatch Updater server'
@@ -368,14 +369,14 @@ def get_all_supported_apps_for_agent(agent_id):
     agent = get_agent_info(agent_id)
     apps = (
         get_apps_data(
-            table=LatestDownloadedSupportedCollection,
+            table=DownloadCollections.LatestDownloadedSupported,
             os_code=agent[AgentKey.OsCode]
         )
     )
     if apps:
         update_apps = (
             IncomingSupportedOrAgentApps(
-                table=SupportedAppsCollection
+                table=AppCollections.SupportedApps
             )
         )
         update_apps.update_agents_with_supported(apps, [agent])
@@ -385,7 +386,7 @@ def get_all_agent_apps_for_agent(agent_id):
     agent = get_agent_info(agent_id)
     apps = (
         get_apps_data(
-            table=LatestDownloadedAgentCollection,
+            table=DownloadCollections.LatestDownloadedAgent,
             os_code=agent[AgentKey.OsCode]
         )
     )
@@ -393,7 +394,7 @@ def get_all_agent_apps_for_agent(agent_id):
     if apps:
         update_apps = (
             IncomingSupportedOrAgentApps(
-                table=AgentAppsCollection
+                table=AppCollections.vFenseApps
             )
         )
         update_apps.update_agents_with_supported(apps, [agent])

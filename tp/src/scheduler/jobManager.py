@@ -273,7 +273,7 @@ def remove_job(sched, jobname, customer_name,
 
 
 def get_appid_list(agent_id, severity=None,
-                   table=AppsPerAgentCollection):
+                   table=AppCollections.AppsPerAgent):
 
     severities = ['Critical', 'Recommended', 'Optional']
 
@@ -321,16 +321,16 @@ def get_agent_apps_details(job, agent_id, details=True, conn=None):
     ]
 
     if job['pkg_type'] == 'system_apps':
-        CurrentAppsPerAgentCollection = AppsPerAgentCollection
-        CurrentAppsCollection = AppsCollection
+        CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
+        CurrentAppsCollection = AppCollections.UniqueApplications
 
     elif job['pkg_type'] == 'custom_apps':
-        CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
-        CurrentAppsCollection = CustomAppsCollection
+        CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
+        CurrentAppsCollection = AppCollections.CustomApps
 
     elif job['pkg_type'] == 'supported_apps':
-        CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
-        CurrentAppsCollection = SupportedAppsCollection
+        CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
+        CurrentAppsCollection = AppCollections.SupportedApps
 
     if not job.get('app_ids', None):
         app_ids = (

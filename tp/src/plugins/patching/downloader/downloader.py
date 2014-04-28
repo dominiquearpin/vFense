@@ -2,14 +2,10 @@ import logging
 import logging.config
 import os
 import re
-from time import time, mktime
-from datetime import datetime
-import urllib
-from vFense.db.client import db_create_close, r, db_connect
-from vFense.plugins.patching import *
+from vFense.plugins.patching import AppsKey
+from vFense.plugins.patching._constants import CommonFileKeys
 from vFense.plugins.patching.rv_db_calls import update_os_app,\
     update_supported_app, update_agent_app
-from vFense.errorz.error_messages import GenericResults
 from vFense.errorz.status_codes import PackageCodes
 from vFense.core.agent import *
 from urlgrabber import urlgrab
@@ -57,10 +53,10 @@ def download_all_files_in_app(
         )
         update_os_app(app_id, new_status)
         for file_info in file_data:
-            uri = str(file_info[PKG_URI])
-            lhash = str(file_info[PKG_HASH])
-            fname = str(file_info[PKG_NAME])
-            fsize = file_info[PKG_SIZE]
+            uri = str(file_info[CommonFileKeys.PKG_URI])
+            lhash = str(file_info[CommonFileKeys.PKG_HASH])
+            fname = str(file_info[CommonFileKeys.PKG_NAME])
+            fsize = file_info[CommonFileKeys.PKG_SIZE]
             if os_code == 'linux':
                 file_path = dependencies_directory + fname
 

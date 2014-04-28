@@ -3,6 +3,8 @@ import logging.config
 
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching import *
+from vFense.core._constants import CommonKeys
+from vFense.plugins.patching._constants import CommonAppKeys, CommonSeverityKeys
 from vFense.core.agent import *
 from vFense.errorz.error_messages import GenericResults, PackageResults
 
@@ -17,7 +19,7 @@ class RetrieveApps(object):
     def __init__(self, username, customer_name,
                  uri=None, method=None, count=30,
                  offset=0, sort='asc', sort_key=AppsKey.Name,
-                 show_hidden=NO):
+                 show_hidden=CommonKeys.NO):
         """
         """
         self.count = count
@@ -27,15 +29,17 @@ class RetrieveApps(object):
         self.uri = uri
         self.method = method
 
-        self.set_global_properties(AppsCollection, AppsIndexes, 
-            AppsPerAgentCollection, AppsKey, AppsPerAgentKey,
+        self.set_global_properties(
+            AppCollections.UniqueApplications,
+            AppsIndexes, 
+            AppCollections.AppsPerAgent, AppsKey, AppsPerAgentKey,
             AppsPerAgentIndexes
         )
 
-        if show_hidden in ValidHiddenVals:
+        if show_hidden in CommonAppKeys.ValidHiddenVals:
             self.show_hidden = show_hidden
         else:
-            self.show_hidden = NO
+            self.show_hidden = CommonKeys.NO
 
         if sort_key in self.pluck_list:
             self.sort_key = sort_key
@@ -92,7 +96,7 @@ class RetrieveApps(object):
     @db_create_close
     def filter_by_status(self, pkg_status, conn=None):
         try:
-            if pkg_status in ValidPackageStatuses:
+            if pkg_status in CommonAppKeys.ValidPackageStatuses:
                 base = (
                     r
                     .table(self.CurrentAppsPerAgentCollection, use_outdated=True)
@@ -103,8 +107,8 @@ class RetrieveApps(object):
                     .map(self.joined_map_hash)
                 )
 
-                if self.show_hidden == NO:
-                    base = base.filter({self.CurrentAppsKey.Hidden: NO})
+                if self.show_hidden == CommonKeys.NO:
+                    base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
                 packages = list(
                     base
@@ -152,15 +156,15 @@ class RetrieveApps(object):
     @db_create_close
     def filter_by_severity(self, sev, conn=None):
         try:
-            if sev in ValidRvSeverities:
+            if sev in CommonSeverityKeys.ValidRvSeverities:
                 base = (
                     r
                     .table(self.CurrentAppsCollection)
                     .get_all(self.customer_name, sev, index=self.CurrentAppsIndexes.CustomerAndRvSeverity)
                 )
 
-                if self.show_hidden == NO:
-                    base = base.filter({self.CurrentAppsKey.Hidden: NO})
+                if self.show_hidden == CommonKeys.NO:
+                    base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
                 packages = list(
                     base
@@ -207,8 +211,8 @@ class RetrieveApps(object):
     @db_create_close
     def filter_by_status_and_sev(self, pkg_status, sev, conn=None):
         try:
-            if pkg_status in ValidPackageStatuses:
-                if sev in ValidRvSeverities:
+            if pkg_status in CommonAppKeys.ValidPackageStatuses:
+                if sev in CommonSeverityKeys.ValidRvSeverities:
                     base = (
                         r
                         .table(self.CurrentAppsPerAgentCollection)
@@ -223,8 +227,8 @@ class RetrieveApps(object):
                         .map(self.joined_map_hash)
                     )
 
-                    if self.show_hidden == NO:
-                        base = base.filter({self.CurrentAppsKey.Hidden: NO})
+                    if self.show_hidden == CommonKeys.NO:
+                        base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
                     packages = list(
                         base
@@ -287,8 +291,8 @@ class RetrieveApps(object):
                 .get_all(self.customer_name, index=self.CurrentAppsIndexes.Customers)
             )
 
-            if self.show_hidden == NO:
-                base = base.filter({self.CurrentAppsKey.Hidden: NO})
+            if self.show_hidden == CommonKeys.NO:
+                base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
             packages = list(
                 base
@@ -333,8 +337,8 @@ class RetrieveApps(object):
                 .get_all(self.customer_name, index=self.CurrentAppsIndexes.Customers)
             )
 
-            if self.show_hidden == NO:
-                base = base.filter({self.CurrentAppsKey.Hidden: NO})
+            if self.show_hidden == CommonKeys.NO:
+                base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
             packages = list(
                 base
@@ -376,7 +380,7 @@ class RetrieveApps(object):
     @db_create_close
     def filter_by_status_and_query_by_name(self, name, pkg_status, conn=None):
         try:
-            if pkg_status in ValidPackageStatuses:
+            if pkg_status in CommonAppKeys.ValidPackageStatuses:
                 base = (
                     r
                     .table(self.CurrentAppsPerAgentCollection)
@@ -387,8 +391,8 @@ class RetrieveApps(object):
                     .map(self.joined_map_hash)
                 )
 
-                if self.show_hidden == NO:
-                    base = base.filter({self.CurrentAppsKey.Hidden: NO})
+                if self.show_hidden == CommonKeys.NO:
+                    base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
                 packages = list(
                     base
@@ -438,8 +442,8 @@ class RetrieveApps(object):
     def filter_by_status_and_query_by_name_and_sev(self, name, pkg_status,
                                                    sev, conn=None):
         try:
-            if pkg_status in ValidPackageStatuses:
-                if sev in ValidRvSeverities:
+            if pkg_status in CommonAppKeys.ValidPackageStatuses:
+                if sev in CommonSeverityKeys.ValidRvSeverities:
                     base = (
                         r
                         .table(self.CurrentAppsPerAgentCollection)
@@ -454,8 +458,8 @@ class RetrieveApps(object):
                         .map(self.joined_map_hash)
                     )
 
-                    if self.show_hidden == NO:
-                        base = base.filter({self.CurrentAppsKey.Hidden: NO})
+                    if self.show_hidden == CommonKeys.NO:
+                        base = base.filter({self.CurrentAppsKey.Hidden: CommonKeys.NO})
 
                     packages = list(
                         base
@@ -525,7 +529,7 @@ class RetrieveCustomApps(RetrieveApps):
     def __init__(self, username, customer_name,
                  uri=None, method=None, count=30,
                  offset=0, sort='asc', sort_key=CustomAppsKey.Name,
-                 show_hidden=NO):
+                 show_hidden=CommonKeys.NO):
 
         self.count = count
         self.offset = offset
@@ -534,15 +538,17 @@ class RetrieveCustomApps(RetrieveApps):
         self.uri = uri
         self.method = method
 
-        self.set_global_properties(CustomAppsCollection, CustomAppsIndexes, 
-            CustomAppsPerAgentCollection, CustomAppsKey, CustomAppsPerAgentKey,
+        self.set_global_properties(
+            AppCollections.CustomApps, CustomAppsIndexes, 
+            AppCollections.CustomAppsPerAgent,
+            CustomAppsKey, CustomAppsPerAgentKey,
             CustomAppsPerAgentIndexes
         )
 
-        if show_hidden in ValidHiddenVals:
+        if show_hidden in CommonAppKeys.ValidHiddenVals:
             self.show_hidden = show_hidden
         else:
-            self.show_hidden = NO
+            self.show_hidden = CommonKeys.NO
 
         if sort_key in self.pluck_list:
             self.sort_key = sort_key
@@ -562,7 +568,7 @@ class RetrieveSupportedApps(RetrieveApps):
                  uri=None, method=None, count=30,
                  offset=0, sort='asc',
                  sort_key=SupportedAppsKey.Name,
-                 show_hidden=NO):
+                 show_hidden=CommonKeys.NO):
 
         self.count = count
         self.offset = offset
@@ -571,15 +577,17 @@ class RetrieveSupportedApps(RetrieveApps):
         self.uri = uri
         self.method = method
 
-        self.set_global_properties(SupportedAppsCollection, SupportedAppsIndexes, 
-            SupportedAppsPerAgentCollection, SupportedAppsKey, SupportedAppsPerAgentKey,
+        self.set_global_properties(
+            AppCollections.SupportedApps, SupportedAppsIndexes, 
+            AppCollections.SupportedAppsPerAgent,
+            SupportedAppsKey, SupportedAppsPerAgentKey,
             SupportedAppsPerAgentIndexes
         )
 
-        if show_hidden in ValidHiddenVals:
+        if show_hidden in CommonAppKeys.ValidHiddenVals:
             self.show_hidden = show_hidden
         else:
-            self.show_hidden = NO
+            self.show_hidden = CommonKeys.NO
 
         if sort_key in self.pluck_list:
             self.sort_key = sort_key
@@ -599,7 +607,7 @@ class RetrieveAgentApps(RetrieveApps):
                  uri=None, method=None, count=30,
                  offset=0, sort='asc',
                  sort_key=AgentAppsKey.Name,
-                 show_hidden=NO):
+                 show_hidden=CommonKeys.NO):
 
         self.count = count
         self.offset = offset
@@ -608,15 +616,17 @@ class RetrieveAgentApps(RetrieveApps):
         self.uri = uri
         self.method = method
 
-        self.set_global_properties(AgentAppsCollection, AgentAppsIndexes, 
-            AgentAppsPerAgentCollection, AgentAppsKey, AgentAppsPerAgentKey,
+        self.set_global_properties(
+            AppCollections.vFenseApps, AgentAppsIndexes, 
+            AppCollections.vFenseAppsPerAgent, 
+            AgentAppsKey, AgentAppsPerAgentKey,
             AgentAppsPerAgentIndexes
         )
 
-        if show_hidden in ValidHiddenVals:
+        if show_hidden in CommonAppKeys.ValidHiddenVals:
             self.show_hidden = show_hidden
         else:
-            self.show_hidden = NO
+            self.show_hidden = CommonKeys.NO
 
         if sort_key in self.pluck_list:
             self.sort_key = sort_key

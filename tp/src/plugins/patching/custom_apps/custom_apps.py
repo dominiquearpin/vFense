@@ -18,7 +18,7 @@ def add_custom_app_to_agents(username, customer_name, uri, method,
     if app_id and not agent_id:
         app_info = (
             get_app_data(
-                app_id, table=CustomAppsCollection
+                app_id, table=AppCollections.CustomApps
             )
         )
 

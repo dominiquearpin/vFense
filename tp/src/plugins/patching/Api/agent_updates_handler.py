@@ -2,6 +2,7 @@ import simplejson as json
 import logging
 import logging.config
 
+from vFense.core._constants import CommonKeys
 from vFense.core.api.base import BaseHandler
 from vFense.errorz.error_messages import GenericResults, PackageResults
 
@@ -44,9 +45,9 @@ class AgentIdAgentAppsHandler(BaseHandler):
         sort_by = self.get_argument('sort_by', AgentAppsKey.Name)
         hidden = self.get_argument('hidden', 'false')
         if hidden == 'false':
-            hidden = NO
+            hidden = CommonKeys.NO
         else:
-            hidden = YES
+            hidden = CommonKeys.YES
         uri = self.request.uri
         method = self.request.method
         patches = (
@@ -852,9 +853,9 @@ class AgentAppsHandler(BaseHandler):
         sort_by = self.get_argument('sort_by', AgentAppsKey.Name)
         hidden = self.get_argument('hidden', 'false')
         if hidden == 'false':
-            hidden = NO
+            hidden = CommonKeys.NO
         else:
-            hidden = YES
+            hidden = CommonKeys.YES
         uri = self.request.uri
         method = self.request.method
         patches = (

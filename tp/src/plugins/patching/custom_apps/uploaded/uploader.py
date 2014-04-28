@@ -139,7 +139,7 @@ def store_package_info_in_db(
         try:
             updated = (
                 r
-                .table(CustomAppsCollection)
+                .table(AppCollections.CustomApps)
                 .insert(data_to_store, upsert=True)
                 .run(conn)
             )

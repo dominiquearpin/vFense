@@ -3,6 +3,7 @@ import logging.config
 
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys, CommonSeverityKeys
 from vFense.plugins.patching.os_apps.db_calls import get_all_stats_by_appid
 from vFense.plugins.patching.rv_db_calls import get_file_data
 from vFense.core.agent import *
@@ -27,9 +28,9 @@ class RetrieveAppsByAppId(object):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = AppsCollection
+        self.CurrentAppsCollection = AppCollections.UniqueApplications
         self.CurrentAppsIndexes = AppsIndexes
-        self.CurrentAppsPerAgentCollection = AppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
         self.CurrentAppsKey = AppsKey
         self.CurrentAppsPerAgentKey = AppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = AppsPerAgentIndexes
@@ -118,9 +119,9 @@ class RetrieveAgentsByAppId(object):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = AppsCollection
+        self.CurrentAppsCollection = AppCollections.UniqueApplications
         self.CurrentAppsIndexes = AppsIndexes
-        self.CurrentAppsPerAgentCollection = AppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
         self.CurrentAppsKey = AppsKey
         self.CurrentAppsPerAgentKey = AppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = AppsPerAgentIndexes
@@ -145,7 +146,7 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if pkg:
-                if pkg_status in ValidPackageStatuses:
+                if pkg_status in CommonAppKeys.ValidPackageStatuses:
                     agents = list(
                         r
                         .table(self.CurrentAppsPerAgentCollection, use_outdated=True)
@@ -290,7 +291,7 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if pkg:
-                if pkg_status in ValidPackageStatuses:
+                if pkg_status in CommonAppKeys.ValidPackageStatuses:
                     agents = list(
                         r
                         .table(self.CurrentAppsPerAgentCollection, use_outdated=True)
@@ -377,8 +378,8 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if agent:
-                if pkg_status in ValidPackageStatuses:
-                    if sev in ValidRvSeverities:
+                if pkg_status in CommonAppKeys.ValidPackageStatuses:
+                    if sev in CommonSeverityKeys.ValidRvSeverities:
                         agents = list(
                             r
                             .table(self.CurrentAppsPerAgentCollection)
@@ -477,7 +478,7 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if pkg:
-                if sev in ValidRvSeverities:
+                if sev in CommonSeverityKeys.ValidRvSeverities:
                     agents = list(
                         r
                         .table(self.CurrentAppsPerAgentCollection)
@@ -557,7 +558,7 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if pkg:
-                if sev in ValidRvSeverities:
+                if sev in CommonSeverityKeys.ValidRvSeverities:
                     agents = list(
                         r
                         .table(self.CurrentAppsPerAgentCollection)
@@ -651,8 +652,8 @@ class RetrieveAgentsByAppId(object):
                 .run(conn)
             )
             if pkg:
-                if pkg_status in ValidPackageStatuses:
-                    if sev in ValidRvSeverities:
+                if pkg_status in CommonAppKeys.ValidPackageStatuses:
+                    if sev in CommonSeverityKeys.ValidRvSeverities:
                         agents = list(
                             r
                             .table(self.CurrentAppsPerAgentCollection)
@@ -750,9 +751,9 @@ class RetrieveCustomAppsByAppId(RetrieveAppsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = CustomAppsCollection
+        self.CurrentAppsCollection = AppCollections.CustomApps
         self.CurrentAppsIndexes = CustomAppsIndexes
-        self.CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
         self.CurrentAppsKey = CustomAppsKey
         self.CurrentAppsPerAgentKey = CustomAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = CustomAppsPerAgentIndexes
@@ -792,9 +793,9 @@ class RetrieveSupportedAppsByAppId(RetrieveAppsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = SupportedAppsCollection
+        self.CurrentAppsCollection = AppCollections.SupportedApps
         self.CurrentAppsIndexes = SupportedAppsIndexes
-        self.CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
         self.CurrentAppsKey = SupportedAppsKey
         self.CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = SupportedAppsPerAgentIndexes
@@ -832,9 +833,9 @@ class RetrieveAgentAppsByAppId(RetrieveAppsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = AgentAppsCollection
+        self.CurrentAppsCollection = AppCollections.vFenseApps
         self.CurrentAppsIndexes = AgentAppsIndexes
-        self.CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
         self.CurrentAppsKey = AgentAppsKey
         self.CurrentAppsPerAgentKey = AgentAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = AgentAppsPerAgentIndexes
@@ -874,9 +875,9 @@ class RetrieveAgentsByCustomAppId(RetrieveAgentsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = CustomAppsCollection
+        self.CurrentAppsCollection = AppCollections.CustomApps
         self.CurrentAppsIndexes = CustomAppsIndexes
-        self.CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
         self.CurrentAppsKey = CustomAppsKey
         self.CurrentAppsPerAgentKey = CustomAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = CustomAppsPerAgentIndexes
@@ -905,9 +906,9 @@ class RetrieveAgentsBySupportedAppId(RetrieveAgentsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = SupportedAppsCollection
+        self.CurrentAppsCollection = AppCollections.SupportedApps
         self.CurrentAppsIndexes = SupportedAppsIndexes
-        self.CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
         self.CurrentAppsKey = SupportedAppsKey
         self.CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = SupportedAppsPerAgentIndexes
@@ -936,9 +937,9 @@ class RetrieveAgentsByAgentAppId(RetrieveAgentsByAppId):
         self.uri = uri
         self.method = method
         self.app_id = app_id
-        self.CurrentAppsCollection = AgentAppsCollection
+        self.CurrentAppsCollection = AppCollections.vFenseApps
         self.CurrentAppsIndexes = AgentAppsIndexes
-        self.CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+        self.CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
         self.CurrentAppsKey = AgentAppsKey
         self.CurrentAppsPerAgentKey = AgentAppsPerAgentKey
         self.CurrentAppsPerAgentIndexes = AgentAppsPerAgentIndexes

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from vFense.core.tag import *
 from vFense.core.agent import *
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys, CommonSeverityKeys
 from vFense.plugins.patching.rv_db_calls import get_all_app_stats_by_customer
 from vFense.errorz.error_messages import GenericResults
 logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
@@ -33,12 +34,12 @@ def customer_stats_by_os(username, customer_name,
     try:
         stats = (
             r
-            .table(AppsPerAgentCollection, use_outdated=True)
+            .table(AppCollections.AppsPerAgent, use_outdated=True)
             .get_all(
-                [AVAILABLE, customer_name],
+                [CommonAppKeys.AVAILABLE, customer_name],
                 index=AppsPerAgentIndexes.StatusAndCustomer
             )
-            .eq_join(AgentKey.AgentId, r.table(AgentsCollection))
+            .eq_join(AgentKey.AgentId, r.table(AgentCollections.Agents))
             .map(
                 {
                     AppsKey.AppId: r.row['left'][AppsKey.AppId],
@@ -87,16 +88,16 @@ def tag_stats_by_os(username, customer_name,
             .pluck(TagsPerAgentKey.AgentId)
             .eq_join(
                 lambda x: [
-                    AVAILABLE,
+                    CommonAppKeys.AVAILABLE,
                     x[AppsPerAgentKey.AgentId]
                 ],
-                r.table(AppsPerAgentCollection),
+                r.table(AppCollections.AppsPerAgent),
                 index=AppsPerAgentIndexes.StatusAndAgentId
             )
             .zip()
-            .eq_join(AgentKey.AgentId, r.table(AgentsCollection))
+            .eq_join(AgentKey.AgentId, r.table(AgentCollections.Agents))
             .zip()
-            .pluck(APP_ID, AgentKey.OsString)
+            .pluck(CommonAppKeys.APP_ID, AgentKey.OsString)
             .distinct()
             .group(AgentKey.OsString)
             .count()
@@ -154,7 +155,7 @@ def bar_chart_for_appid_by_status(app_id=None, customer_name='default',
     try:
         status = (
             r
-            .table(AppsPerAgentCollection, use_outdated=True)
+            .table(AppCollections.AppsPerAgent, use_outdated=True)
             .get_all([app_id, customer_name], index=AppsPerAgentIndexes.AppIdAndCustomer)
             .group('status')
             .count()
@@ -194,7 +195,7 @@ def app_stats_by_severity(sevs):
                 }
             )
         sevs_in_sevs = map(lambda x: x['severity'], sevs)
-        difference = list(set(ValidRvSeverities).difference(sevs_in_sevs))
+        difference = list(set(CommonSeverityKeys.ValidRvSeverities).difference(sevs_in_sevs))
 
         if difference:
             for sev in difference:
@@ -206,13 +207,13 @@ def app_stats_by_severity(sevs):
                 )
 
         for sev in sevs:
-            if sev['severity'] == CRITICAL:
+            if sev['severity'] == CommonSeverityKeys.CRITICAL:
                 crit = sev
 
-            elif sev['severity'] == OPTIONAL:
+            elif sev['severity'] == CommonSeverityKeys.OPTIONAL:
                 opt = sev
 
-            elif sev['severity'] == RECOMMENDED:
+            elif sev['severity'] == CommonSeverityKeys.RECOMMENDED:
                 rec = sev
 
         new_sevs.append(opt)
@@ -230,14 +231,14 @@ def get_severity_bar_chart_stats_for_customer(username, customer_name,
     try:
         sevs = (
             r
-            .table(AppsPerAgentCollection, use_outdated=True)
+            .table(AppCollections.AppsPerAgent, use_outdated=True)
             .get_all(
-                [AVAILABLE, customer_name],
+                [CommonAppKeys.AVAILABLE, customer_name],
                 index=AppsPerAgentIndexes.StatusAndCustomer
             )
             .pluck(AppsKey.AppId)
             .distinct()
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .map(
                 {
                     AppsKey.AppId: r.row['right'][AppsKey.AppId],
@@ -255,7 +256,7 @@ def get_severity_bar_chart_stats_for_customer(username, customer_name,
         results = (
             GenericResults(
                 username, uri, method
-            ).information_retrieved(data, len(ValidRvSeverities))
+            ).information_retrieved(data, len(CommonSeverityKeys.ValidRvSeverities))
         )
 
     except Exception as e:
@@ -275,12 +276,12 @@ def get_severity_bar_chart_stats_for_agent(username, customer_name,
     try:
         sevs = (
             r
-            .table(AppsPerAgentCollection, use_outdated=True)
+            .table(AppCollections.AppsPerAgent, use_outdated=True)
             .get_all(
-                [AVAILABLE, agent_id],
+                [CommonAppKeys.AVAILABLE, agent_id],
                 index=AppsPerAgentIndexes.StatusAndAgentId
             )
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .map(
                 {
                     AppsKey.AppId: r.row['right'][AppsKey.AppId],
@@ -298,7 +299,7 @@ def get_severity_bar_chart_stats_for_agent(username, customer_name,
         results = (
             GenericResults(
                 username, uri, method
-            ).information_retrieved(data, len(ValidRvSeverities))
+            ).information_retrieved(data, len(CommonSeverityKeys.ValidRvSeverities))
         )
 
     except Exception as e:
@@ -323,10 +324,10 @@ def get_severity_bar_chart_stats_for_tag(username, customer_name,
             .pluck(TagsPerAgentKey.AgentId)
             .eq_join(
                 lambda x: [
-                    AVAILABLE,
+                    CommonAppKeys.AVAILABLE,
                     x[AppsPerAgentKey.AgentId]
                 ],
-                r.table(AppsPerAgentCollection),
+                r.table(AppCollections.AppsPerAgent),
                 index=AppsPerAgentIndexes.StatusAndAgentId
             )
             .map(
@@ -334,7 +335,7 @@ def get_severity_bar_chart_stats_for_tag(username, customer_name,
                     AppsKey.AppId: r.row['right'][AppsKey.AppId],
                 }
             )
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .map(
                 {
                     AppsKey.AppId: r.row['right'][AppsKey.AppId],
@@ -352,7 +353,7 @@ def get_severity_bar_chart_stats_for_tag(username, customer_name,
         results = (
             GenericResults(
                 username, uri, method
-            ).information_retrieved(data, len(ValidRvSeverities))
+            ).information_retrieved(data, len(CommonSeverityKeys.ValidRvSeverities))
         )
 
     except Exception as e:
@@ -375,9 +376,9 @@ def top_packages_needed(username, customer_name,
     try:
         appid_needed = (
             r
-            .table(AppsPerAgentCollection)
+            .table(AppCollections.AppsPerAgent)
             .get_all(
-                [AVAILABLE, customer_name],
+                [CommonAppKeys.AVAILABLE, customer_name],
                 index=AppsPerAgentIndexes.StatusAndCustomer
             )
             .group(AppsPerAgentKey.AppId)
@@ -390,7 +391,7 @@ def top_packages_needed(username, customer_name,
         for i in xrange(len(appid_needed)):
             app_info = (
                 r
-                .table(AppsCollection)
+                .table(AppCollections.UniqueApplications)
                 .get_all(
                     appid_needed[i]['group'],
                     index=AppsIndexes.AppId)
@@ -444,14 +445,14 @@ def recently_released_packages(username, customer_name,
     try:
         data = list(
             r
-            .table(AppsPerAgentCollection, use_outdated=True)
+            .table(AppCollections.AppsPerAgent, use_outdated=True)
             .get_all(
                 [
-                    AVAILABLE, customer_name
+                    CommonAppKeys.AVAILABLE, customer_name
                 ],
                 index=AppsPerAgentIndexes.StatusAndCustomer
             )
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .map(
                 {
                     AppsKey.Name: r.row['right'][AppsKey.Name],
@@ -461,9 +462,9 @@ def recently_released_packages(username, customer_name,
                     AppsKey.ReleaseDate: r.row['right'][AppsKey.ReleaseDate].to_epoch_time(),
                     'count': (
                         r
-                        .table(AppsPerAgentCollection)
+                        .table(AppCollections.AppsPerAgent)
                         .get_all(
-                            [r.row['right'][AppsKey.AppId], AVAILABLE],
+                            [r.row['right'][AppsKey.AppId], CommonAppKeys.AVAILABLE],
                             index=AppsPerAgentIndexes.AppIdAndStatus
                         )
                         .count()
@@ -518,12 +519,12 @@ def get_os_apps_history(username, customer_name, uri, method, status,
             start_date = 0.0
         data = (
             r
-            .table(AppsPerAgentCollection)
+            .table(AppCollections.AppsPerAgent)
             .get_all(
-                [AVAILABLE, customer_name],
+                [CommonAppKeys.AVAILABLE, customer_name],
                 index=AppsPerAgentIndexes.StatusAndCustomer
             )
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .zip()
             .filter(
                 r.row[AppsKey.ReleaseDate].during(
@@ -549,7 +550,7 @@ def get_os_apps_history(username, customer_name, uri, method, status,
                                 AppsKey.RvSeverity: x[AppsKey.RvSeverity]
                             }
                         ],
-                    COUNT: 1,
+                    CommonAppKeys.COUNT: 1,
                 }
             )
             .reduce(
@@ -580,7 +581,7 @@ def get_os_apps_history(username, customer_name, uri, method, status,
                                             AppsKey.Version: a[AppsKey.Version],
                                         }
                                     ],
-                                COUNT: 1
+                                CommonAppKeys.COUNT: 1
                             }
                         )
                         .reduce(
@@ -630,12 +631,12 @@ def get_os_apps_history_for_agent(username, customer_name, uri, method,
             start_date = 0.0
         data = (
             r
-            .table(AppsPerAgentCollection)
+            .table(AppCollections.AppsPerAgent)
             .get_all(
                 [status, agent_id],
                 index=AppsPerAgentIndexes.StatusAndAgentId
             )
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .zip()
             .filter(
                 r.row[AppsKey.ReleaseDate].during(
@@ -661,7 +662,7 @@ def get_os_apps_history_for_agent(username, customer_name, uri, method,
                                 AppsKey.RvSeverity: x[AppsKey.RvSeverity]
                             }
                         ],
-                    COUNT: 1,
+                    CommonAppKeys.COUNT: 1,
                 }
             )
             .reduce(
@@ -692,7 +693,7 @@ def get_os_apps_history_for_agent(username, customer_name, uri, method,
                                             AppsKey.Version: a[AppsKey.Version],
                                         }
                                     ],
-                                COUNT: 1
+                                CommonAppKeys.COUNT: 1
                             }
                         )
                         .reduce(
@@ -750,11 +751,11 @@ def get_os_apps_history_for_tag(username, customer_name, uri, method,
                     status,
                     x[AppsPerAgentKey.AgentId]
                 ],
-                r.table(AppsPerAgentCollection),
+                r.table(AppCollections.AppsPerAgent),
                 index=AppsPerAgentIndexes.StatusAndAgentId
             )
             .zip()
-            .eq_join(AppsKey.AppId, r.table(AppsCollection))
+            .eq_join(AppsKey.AppId, r.table(AppCollections.UniqueApplications))
             .zip()
             .filter(
                 r.row[AppsKey.ReleaseDate].during(
@@ -780,7 +781,7 @@ def get_os_apps_history_for_tag(username, customer_name, uri, method,
                                 AppsKey.RvSeverity: x[AppsKey.RvSeverity]
                             }
                         ],
-                    COUNT: 1,
+                    CommonAppKeys.COUNT: 1,
                 }
             )
             .reduce(
@@ -811,7 +812,7 @@ def get_os_apps_history_for_tag(username, customer_name, uri, method,
                                             AppsKey.Version: a[AppsKey.Version],
                                         }
                                     ],
-                                COUNT: 1
+                                CommonAppKeys.COUNT: 1
                             }
                         )
                         .reduce(

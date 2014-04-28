@@ -8,6 +8,7 @@ from vFense.core.tag.tagManager import get_tags_by_agent_id, delete_agent_from_a
 from vFense.core.tag.tagManager import delete_agent_from_all_tags
 from vFense.core.tag import *
 from vFense.db.client import db_create_close, r
+from vFense.plugins.patching._constants import CommonAppKeys
 from vFense.plugins.patching.rv_db_calls import \
     get_all_app_stats_by_agentid, delete_all_app_data_for_agent,\
     update_all_app_data_for_agent
@@ -47,7 +48,7 @@ class AgentManager():
             )
             if agent_data:
                 agent_data['tags'] = get_tags_by_agent_id(agent_id=self.agent_id)
-                agent_data[BASIC_RV_STATS] = (
+                agent_data[CommonAppKeys.BASIC_RV_STATS] = (
                     get_all_app_stats_by_agentid(
                         self.username, self.customer_name,
                         uri, method, self.agent_id

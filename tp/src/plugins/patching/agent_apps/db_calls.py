@@ -1,5 +1,6 @@
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys
 from vFense.core.agent import *
 from vFense.errorz.error_messages import GenericResults, PackageResults
 
@@ -17,7 +18,7 @@ def get_all_stats_by_appid(username, customer_name,
     try:
         apps = (
             r
-            .table(AgentAppsPerAgentCollection)
+            .table(AppCollections.vFenseAppsPerAgent)
             .get_all(
                 [app_id, customer_name],
                 index=AgentAppsPerAgentIndexes.AppIdAndCustomer
@@ -77,7 +78,7 @@ def get_all_agents_per_appid(username, customer_name,
     try:
         agents = (
             r
-            .table(AgentAppsPerAgentCollection)
+            .table(AppCollections.vFenseAppsPerAgent)
             .get_all(app_id, index=AgentAppsPerAgentKey.AppId)
             .eq_join(AgentAppsPerAgentKey.AgentId, r.table(AgentsCollection))
             .zip()
@@ -152,7 +153,7 @@ def get_all_stats_by_agentid(username, customer_name,
     try:
         apps = (
             r
-            .table(AgentAppsPerAgentCollection)
+            .table(AppCollections.vFenseAppsPerAgent)
             .get_all(agent_id, index=AgentAppsPerAgentKey.AgentId)
             .group(AgentAppsPerAgentKey.Status)
             .count()
@@ -258,7 +259,7 @@ def get_all_stats_by_tagid(username, customer_name,
 @db_create_close
 def insert_into_agent_apps(customer_name, app, conn=None):
 
-    table=AgentAppsCollection
+    table=AppCollections.vFenseApps
 
     exists = []
     try:
@@ -279,7 +280,7 @@ def insert_into_agent_apps(customer_name, app, conn=None):
     status = app.pop(AppsPerAgentKey.Status)
     if exists:
 
-        if len(app[AppsKey.FileData]) > 0 and status == AVAILABLE:
+        if len(app[AppsKey.FileData]) > 0 and status == CommonAppKeys.AVAILABLE:
             app[AppsKey.FileData] = (
                 unique_uris(
                     uris=app[AppsKey.FileData],
@@ -305,8 +306,8 @@ def insert_into_agent_apps(customer_name, app, conn=None):
 
     else:
 
-        if (len(app[AppsKey.FileData]) > 0 and status == AVAILABLE or
-                len(app[AppsKey.FileData]) > 0 and status == INSTALLED):
+        if (len(app[AppsKey.FileData]) > 0 and status == CommonAppKeys.AVAILABLE or
+                len(app[AppsKey.FileData]) > 0 and status == CommonAppKeys.INSTALLED):
             app[AppsKey.FilesDownloadStatus] = PackageCodes.FilePendingDownload
 
             app[AppsKey.FileData] = (
@@ -315,16 +316,16 @@ def insert_into_agent_apps(customer_name, app, conn=None):
                     orig_uris=app[AppsKey.FileData]
                 )
             )
-        elif len(app[AppsKey.FileData]) == 0 and status == AVAILABLE:
+        elif len(app[AppsKey.FileData]) == 0 and status == CommonAppKeys.AVAILABLE:
             app[AppsKey.FilesDownloadStatus] = PackageCodes.MissingUri
 
-        elif len(app[AppsKey.FileData]) == 0 and status == INSTALLED:
+        elif len(app[AppsKey.FileData]) == 0 and status == CommonAppKeys.INSTALLED:
             app[AppsKey.FilesDownloadStatus] = PackageCodes.FileNotRequired
 
         try:
             (
                 r
-                .table(AppsCollection)
+                .table(AppCollections.UniqueApplications)
                 .insert(app)
                 .run(conn, no_reply=True)
             )
@@ -340,7 +341,7 @@ def insert_into_agent_apps(customer_name, app, conn=None):
 
 
 @db_create_close
-def add_or_update_applications(table=AppsPerAgentCollection, pkg_list=[],
+def add_or_update_applications(table=AppCollections.AppsPerAgent, pkg_list=[],
                                delete_afterwards=True, conn=None):
     completed = False
     inserted_count = 0

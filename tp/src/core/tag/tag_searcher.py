@@ -7,6 +7,7 @@ from vFense.core.agent import *
 from vFense.utils.common import *
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys
 from vFense.plugins.patching.rv_db_calls import get_all_avail_stats_by_tagid, \
     get_all_app_stats_by_tagid
 from vFense.errorz.error_messages import GenericResults, TagResults
@@ -55,7 +56,7 @@ class TagSearcher():
                 )
             if data:
                 for tag in xrange(len(data)):
-                    data[tag][BASIC_RV_STATS] = (
+                    data[tag][CommonAppKeys.BASIC_RV_STATS] = (
                         get_all_avail_stats_by_tagid(
                             self.username, self.customer_name,
                             self.uri, self.method, data[tag][TagsKey.TagId]
@@ -133,7 +134,7 @@ class TagSearcher():
                 )
                 if data:
                     for tag in xrange(len(data)):
-                        data[tag][BASIC_RV_STATS] = (
+                        data[tag][CommonAppKeys.BASIC_RV_STATS] = (
                             get_all_avail_stats_by_tagid(
                                 self.username, self.customer_name,
                                 self.uri, self.method, tag[TagsKey.TagId]
@@ -204,7 +205,7 @@ class TagSearcher():
 
             if data:
                 for tag in xrange(len(data)):
-                    data[tag][BASIC_RV_STATS] = (
+                    data[tag][CommonAppKeys.BASIC_RV_STATS] = (
                         get_all_avail_stats_by_tagid(
                             self.username, self.customer_name,
                             self.uri, self.method, data[tag][TagsKey.TagId]
@@ -267,7 +268,7 @@ class TagSearcher():
                     .run(conn)
                 )
 
-                tag_info[BASIC_RV_STATS] = (
+                tag_info[CommonAppKeys.BASIC_RV_STATS] = (
                     get_all_app_stats_by_tagid(
                         self.username, self.customer_name,
                         self.uri, self.method, tag_id

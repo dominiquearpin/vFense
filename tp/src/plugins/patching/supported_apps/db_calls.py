@@ -21,7 +21,7 @@ def add_supported_app_to_agents(username, customer_name, uri, method, agent_id=N
         apps_info = (
             get_apps_data(
                 customer_name,
-                table=SupportedAppsCollection,
+                table=AppCollections.SupportedApps,
                 os_code=agent_info[AgentKey.OsCode]
             )
         )
@@ -44,7 +44,7 @@ def add_supported_app_to_agents(username, customer_name, uri, method, agent_id=N
                 )
                 apps_to_insert_per_agent(
                     username, uri, method, agent_info_to_insert,
-                    table=SupportedAppsPerAgentCollection
+                    table=AppCollections.SupportedAppsPerAgent
                 )
 
 
@@ -55,7 +55,7 @@ def get_all_stats_by_appid(username, customer_name,
     try:
         apps = (
             r
-            .table(SupportedAppsPerAgentCollection)
+            .table(AppCollections.SupportedAppsPerAgent)
             .get_all(
                 [app_id, customer_name],
                 index=SupportedAppsPerAgentIndexes.AppIdAndCustomer
@@ -115,7 +115,7 @@ def get_all_agents_per_appid(username, customer_name,
     try:
         agents = (
             r
-            .table(SupportedAppsPerAgentCollection)
+            .table(AppCollections.SupportedAppsPerAgent)
             .get_all(app_id, index=SupportedAppsPerAgentKey.AppId)
             .eq_join(SupportedAppsPerAgentKey.AgentId, r.table(AgentsCollection))
             .zip()
@@ -190,7 +190,7 @@ def get_all_stats_by_agentid(username, customer_name,
     try:
         apps = (
             r
-            .table(SupportedAppsPerAgentCollection)
+            .table(AppCollections.SupportedAppsPerAgent)
             .get_all(agent_id, index=SupportedAppsPerAgentKey.AgentId)
             .group(SupportedAppsPerAgentKey.Status)
             .count()

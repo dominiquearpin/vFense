@@ -1,7 +1,8 @@
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching import *
+from vFense.plugins.patching._constants import CommonAppKeys
 from vFense.core.agent import *
-from vFense.errorz.error_messages import GenericResults, PackageResults
+from vFense.errorz.error_messages import GenericResults
 
 import logging
 import logging.config
@@ -13,26 +14,26 @@ logger = logging.getLogger('rvapi')
 @db_create_close
 def get_all_stats_by_appid(username, customer_name,
                            uri, method, app_id,
-                           table=AppsPerAgentCollection,
+                           table=AppCollections.AppsPerAgent,
                            conn=None):
 
-    if table == AppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AppsPerAgentCollection
+    if table == AppCollections.AppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
         CurrentAppsPerAgentKey = AppsPerAgentKey
         CurrentAppsPerAgentIndexes = AppsPerAgentIndexes
 
-    elif table == SupportedAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+    elif table == AppCollections.SupportedAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
         CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
         CurrentAppsPerAgentIndexes = SupportedAppsPerAgentIndexes
 
-    elif table == CustomAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
+    elif table == AppCollections.CustomAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
         CurrentAppsPerAgentKey = CustomAppsPerAgentKey
         CurrentAppsPerAgentIndexes = CustomAppsPerAgentIndexes
 
-    elif table == AgentAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+    elif table == AppCollections.vFenseAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
         CurrentAppsPerAgentKey = AgentAppsPerAgentKey
         CurrentAppsPerAgentIndexes = AgentAppsPerAgentIndexes
 
@@ -56,20 +57,20 @@ def get_all_stats_by_appid(username, customer_name,
                 new_data = (
                     {
                         CurrentAppsPerAgentKey.Status: i['group'],
-                        COUNT: i['reduction'],
-                        NAME: i['group'].capitalize()
+                        CommonAppKeys.COUNT: i['reduction'],
+                        CommonAppKeys.NAME: i['group'].capitalize()
                     }
                 )
                 data.append(new_data)
 
         statuses = map(lambda x: x['status'], data)
-        difference = set(ValidPackageStatuses).difference(statuses)
+        difference = set(CommonAppKeys.ValidPackageStatuses).difference(statuses)
         if len(difference) > 0:
             for status in difference:
                 status = {
-                    COUNT: 0,
-                    STATUS: status,
-                    NAME: status.capitalize()
+                    CommonAppKeys.COUNT: 0,
+                    CommonAppKeys.STATUS: status,
+                    CommonAppKeys.NAME: status.capitalize()
                 }
                 data.append(status)
 
@@ -95,23 +96,23 @@ def get_all_stats_by_appid(username, customer_name,
 @db_create_close
 def get_all_agents_per_appid(username, customer_name,
                              uri, method, app_id,
-                             table=AppsPerAgentCollection,
+                             table=AppCollections.AppsPerAgent,
                              conn=None):
 
-    if table == AppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AppsPerAgentCollection
+    if table == AppCollections.AppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
         CurrentAppsPerAgentKey = AppsPerAgentKey
 
-    elif table == SupportedAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+    elif table == AppCollections.SupportedAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
         CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
 
-    elif table == CustomAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
+    elif table == AppCollections.CustomAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
         CurrentAppsPerAgentKey = CustomAppsPerAgentKey
 
-    elif table == AgentAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+    elif table == AppCollections.vFenseAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
         CurrentAppsPerAgentKey = AgentAppsPerAgentKey
 
     data = []
@@ -137,14 +138,14 @@ def get_all_agents_per_appid(username, customer_name,
                             CurrentAppsPerAgentKey.AgentId: x[CurrentAppsPerAgentKey.AgentId]
                         }
                     ],
-                    COUNT: 1
+                    CommonAppKeys.COUNT: 1
                 }
             )
             .reduce(
                 lambda x, y:
                 {
                     AGENTS: x[AGENTS] + y[AGENTS],
-                    COUNT: x[COUNT] + y[COUNT]
+                    CommonAppKeys.COUNT: x[COUNT] + y[COUNT]
                 }
             )
             .ungroup()
@@ -157,13 +158,13 @@ def get_all_agents_per_appid(username, customer_name,
                 data.append(new_data)
 
         statuses = map(lambda x: x['status'], data)
-        difference = set(ValidPackageStatuses).difference(statuses)
+        difference = set(CommonAppKeys.ValidPackageStatuses).difference(statuses)
         if len(difference) > 0:
             for status in difference:
                 status = {
-                    COUNT: 0,
+                    CommonAppKeys.COUNT: 0,
                     AGENTS: [],
-                    STATUS: status
+                    CommonAppKeys.STATUS: status
                 }
                 data.append(status)
 
@@ -190,23 +191,23 @@ def get_all_agents_per_appid(username, customer_name,
 @db_create_close
 def get_all_stats_by_agentid(username, customer_name,
                              uri, method, agent_id,
-                             table=AppsPerAgentCollection,
+                             table=AppCollections.AppsPerAgent,
                              conn=None):
 
-    if table == AppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AppsPerAgentCollection
+    if table == AppCollections.AppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.AppsPerAgent
         CurrentAppsPerAgentKey = AppsPerAgentKey
 
-    elif table == SupportedAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = SupportedAppsPerAgentCollection
+    elif table == AppCollections.SupportedAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.SupportedAppsPerAgent
         CurrentAppsPerAgentKey = SupportedAppsPerAgentKey
 
-    elif table == CustomAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = CustomAppsPerAgentCollection
+    elif table == AppCollections.CustomAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.CustomAppsPerAgent
         CurrentAppsPerAgentKey = CustomAppsPerAgentKey
 
-    elif table == AgentAppsPerAgentCollection:
-        CurrentAppsPerAgentCollection = AgentAppsPerAgentCollection
+    elif table == AppCollections.vFenseAppsPerAgent:
+        CurrentAppsPerAgentCollection = AppCollections.vFenseAppsPerAgent
         CurrentAppsPerAgentKey = AgentAppsPerAgentKey
 
     try:
@@ -226,20 +227,20 @@ def get_all_stats_by_agentid(username, customer_name,
                 new_data = (
                     {
                         AppsPerAgentKey.Status: i['group'][CurrentAppsPerAgentKey.Status],
-                        COUNT: i['reduction'],
-                        NAME: i['group'][CurrentAppsPerAgentKey.Status].capitalize()
+                        CommonAppKeys.COUNT: i['reduction'],
+                        CommonAppKeys.NAME: i['group'][CurrentAppsPerAgentKey.Status].capitalize()
                     }
                 )
                 data.append(new_data)
 
         statuses = map(lambda x: x['status'], data)
-        difference = set(ValidPackageStatuses).difference(statuses)
+        difference = set(CommonAppKeys.ValidPackageStatuses).difference(statuses)
         if len(difference) > 0:
             for status in difference:
                 status = {
-                    COUNT: 0,
-                    STATUS: status,
-                    NAME: status.capitalize()
+                    CommonAppKeys.COUNT: 0,
+                    CommonAppKeys.STATUS: status,
+                    CommonAppKeys.NAME: status.capitalize()
                 }
                 data.append(status)
 
