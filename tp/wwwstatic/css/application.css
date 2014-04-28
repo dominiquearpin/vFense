@@ -1744,6 +1744,11 @@ input#deleteAllAgents {
     border-radius: 0;
 }
 
+<<<<<<< HEAD
 .right-margin {
     margin-right: 8px;
+=======
+.width-auto {
+    width: auto !important;
+>>>>>>> e6f06ba51677c455f35c3c3c699659ff4867e531
 }

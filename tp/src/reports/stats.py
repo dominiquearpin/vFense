@@ -170,7 +170,7 @@ def systems_os_details(username, customer_name, os_code=None,
     systems_os_details=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         system_detail=system_os_details(agent_info=agent_info)
         if system_detail:
             systems_os_details.append(system_detail)
@@ -198,7 +198,7 @@ def systems_hardware_details (username, customer_name, os_code=None,
     systems_hardware_details=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         hardware_details=system_hardware_details(agent_info=agent_info)
         if hardware_details:
             systems_hardware_details.append(hardware_details)
@@ -226,7 +226,7 @@ def systems_cpu_details (username, customer_name, os_code=None,
     systems_cpu_details=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         cpu_stats=system_cpu_stats(agent_info)
         if cpu_stats:
             systems_cpu_details.append(cpu_stats)
@@ -253,7 +253,7 @@ def systems_memory_stats(username, customer_name, os_code=None,
     systems_memory_details=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         memory_stats=system_memory_stats(agent_info)
         if memory_stats:
             systems_memory_details.append(memory_stats)
@@ -281,7 +281,7 @@ def systems_disk_stats(username, customer_name, os_code=None,
     systems_disk_details=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         disk_stats=system_disk_stats(agent_info)
         if disk_stats:
             systems_disk_details.append(disk_stats)
@@ -308,7 +308,7 @@ def systems_network_details(username, customer_name, os_code=None,
     systems_network_infos=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         network_details=system_network_details(agent_info)
         if network_details:
             systems_network_infos.append(network_details)
@@ -335,7 +335,7 @@ def agents_last_updated(username, customer_name, os_code=None,
     agents_uptime_info=[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         last_updated=agent_last_updated(agent_info)
         if last_updated:
             agents_uptime_info.append(last_updated)
@@ -363,7 +363,7 @@ def agents_reboot_pending(username, customer_name, os_code=None,
     agents_not_need_reboot =[]
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         if agent_info:
             computer_name = agent_info.get('computer_name')
             needs_reboot= agent_info.get('needs_reboot')
@@ -400,7 +400,7 @@ def agents_status(username, customer_name, os_code=None,
     agents_down = [] 
     agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         computer_name = agent_info.get('computer_name')
         node_status=agent_status(agent_info)
         if node_status == 'down':

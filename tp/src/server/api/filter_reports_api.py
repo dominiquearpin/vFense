@@ -29,8 +29,8 @@ class AgentsOsQueryDetailsHandler(BaseHandler):
         uri=self.request.uri
         method=self.request.method
         try:
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key', None)
+            query=self.get_argument('query', None)
             results = systems_os_details(username=username, customer_name=customer_name,
                     key=key,query=query, uri=uri, method=method)
             self.set_status(results['http_status'])
@@ -57,8 +57,8 @@ class AgentsHardwareQueryDetailsHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = systems_hardware_details(username=username, customer_name=customer_name, 
                     key=key, query=query, 
                     uri=uri, method=method)
@@ -86,8 +86,8 @@ class AgentsCPUQueryDetailsHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = systems_cpu_details(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method
@@ -116,8 +116,8 @@ class AgentsMemoryQueryDetailsHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = systems_memory_stats(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method,
@@ -146,8 +146,8 @@ class AgentsDiskQueryDetailsHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = systems_disk_stats(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method
@@ -176,8 +176,8 @@ class AgentsNetworkQueryDetailsHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = systems_network_details(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method
@@ -206,8 +206,8 @@ class AgentsLastUpdatedHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = agents_last_updated(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method
@@ -237,8 +237,8 @@ class AgentsRequireRebootHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = agents_reboot_pending(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method
@@ -268,8 +268,8 @@ class AgentsConnectionStatusHandler(BaseHandler):
         method=self.request.method
         try:
             results= None
-            key=self.get_argument('key')
-            query=self.get_argument('query')
+            key=self.get_argument('key',None)
+            query=self.get_argument('query',None)
             results = agents_status(username=username, customer_name=customer_name,
                     query=query, key=key,
                     uri=uri, method=method

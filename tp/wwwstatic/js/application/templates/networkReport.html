@@ -1,31 +1,70 @@
-<article class="row-fluid">
-    <section class="list">
-        <div class="legend row-fluid">
-            <strong class="span4">Computer Name</strong>
-            <span class="span4">Network Name</span>
-            <span class="span2">MAC</span>
-            <span class="span2 alignRight">IP Address</span>
+<% if (header) { %>
+    <% if (left) { %>
+        <small>Search By</small>
+        <span></span>
+        <select name="advancedSearch" class="width-auto">
+            <option value="computer_name">Computer Name</option>
+            <option value="network_name">Network Name</option>
+            <option value="mac_address">MAC Address</option>
+            <option value="ip_address">IP Address</option>
+        </select>
+        <span></span>
+        <div id="searchString" style="display: inline">
+            <div class="input-prepend noMargin">
+                <span class="add-on">
+                <i class="icon-search"></i>
+                </span>
+                <input class="input-small width-auto" type="text" name="search" data-type="computer_name" placeholder="Search By Computer Name">
+            </div>
         </div>
-        <div class="items">
-            <% if (models.length) { %>
-                <% _.each(models, function (model) { %>
-                    <div class="item">
-                        <span class="span4"><%= model.get('computer-name') %></span>
-                        <% if (model.get('network').length) { %>
-                            <% _.each(model.get('network'), function (network, index) { %>
-                                <% if (index) { %> <span class="span4 noMargin"></span> <% } %>
-                                <span class="span4"><%= network.name %></span>
-                                <span class="span2"><%= network.mac %></span>
-                                <span class="span2 alignRight"><%= network.ip_address %></span>
-                            <% }); %>
-                        <% } else { %>
-                            <span class="span8">No network adapters available</span>
-                        <% } %>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <div class="item">No data available</div>
-            <% } %>
+    <% } else { %>
+        <div class="pull-right hidden-print">
+            <small>Sort By</small>
+            <span></span>
+            <select name="sort" style="width: auto">
+                <option value="computer_name">Computer Name</option>
+                <option value="network_name">Network Name</option>
+                <option value="mac_address">MAC Address</option>
+                <option value="ip_address">IP Address</option>
+            </select>
+            <span></span>
+            <select name="order">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <span></span>
+            <small>Filter By</small>
+            <span></span>
+            <select name="filterKey" style="width: auto">
+                <option value="none">None</option>
+                <option value="network_name">Network Name</option>
+                <option value="mac_address">OS Code</option>
+                <option value="ip_address">IP Address</option>
+            </select>
+            <span></span>
+            <select name="filterValue" disabled="disabled">
+
+            </select>
+            <span></span>
         </div>
-    </section>
-</article>
+    <% } %>
+<% } else if (legend) { %>
+    <strong class="span4">Computer Name</strong>
+    <span class="span3">Network Name</span>
+    <span class="span3">MAC Address</span>
+    <span class="span2 alignRight">IP Address</span>
+<% } else { %>
+    <div class="item row-fluid">
+        <span class="span4"><%= model.get('computer_name') %></span>
+        <% if (model.get('network').length) { %>
+            <% _.each(model.get('network'), function (network, index) { %>
+                <% if (index) { %> <span class="span4 noMargin"></span> <% } %>
+                <span class="span3"><%= network.name %></span>
+                <span class="span3"><%= network.mac %></span>
+                <span class="span2 alignRight"><%= network.ip_address %></span>
+            <% }); %>
+        <% } else { %>
+            <span class="span8">No network adapters available</span>
+        <% } %>
+    </div>
+<% } %>

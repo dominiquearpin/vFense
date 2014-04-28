@@ -1,35 +1,75 @@
-<article class="row-fluid">
-    <section class="list">
-        <div class="legend row-fluid">
-            <strong class="span3">Computer Name</strong>
-            <span class="span2">HDD Name</span>
-            <span class="span2">Mount</span>
-            <span class="span2">Free</span>
-            <span class="span2">Used</span>
-            <span class="span1 alignRight">Total</span>
+<% if (header) { %>
+    <% if (left) { %>
+        <small>Search By</small>
+        <span></span>
+        <select name="advancedSearch" class="width-auto">
+            <option value="computer_name">Computer Name</option>
+            <option value="free">Free</option>
+            <option value="used">Used</option>
+            <option value="total">Total</option>
+        </select>
+        <span></span>
+        <div id="searchString" style="display: inline">
+            <div class="input-prepend noMargin">
+                <span class="add-on">
+                <i class="icon-search"></i>
+                </span>
+                <input class="input-small width-auto" type="text" name="search" data-type="computer_name" placeholder="Search By Computer Name">
+            </div>
         </div>
-        <div class="items">
-            <% if (models.length) { %>
-                <% _.each(models, function (model) { %>
-                    <div class="item">
-                        <span class="span3"><%= model.get('computer-name') %></span>
-                        <% if (model.get('disk-usage').length) { %>
-                            <% _.each(model.get('disk-usage'), function (disk, index) { %>
-                                <% if (index) { %> <span class="span3 noMargin"></span> <% } %>
-                                <span class="span2"><%= disk.name %></span>
-                                <span class="span2"><%= disk.mount %></span>
-                                <span class="span2"><%= helpers.getDriveSize(disk.free) + ' (' + disk.free_percent + '%)' %></span>
-                                <span class="span2"><%= helpers.getDriveSize(disk.used) + ' (' + disk.used_percent + '%)' %></span>
-                                <span class="span1 alignRight"><%= helpers.getDriveSize(disk.total) %></span>
-                            <% }); %>
-                        <% } else { %>
-                            <span class="span8">No HDD info available</span>
-                        <% } %>
-                    </div>
-                <% }); %>
-            <% } else { %>
-                <div class="item">No data available</div>
-            <% } %>
+    <% } else { %>
+        <div class="pull-right hidden-print">
+            <small>Sort By</small>
+            <span></span>
+            <select name="sort" style="width: auto">
+                <option value="computer_name">Computer Name</option>
+                <option value="free">Free</option>
+                <option value="used">Used</option>
+                <option value="total">Total</option>
+            </select>
+            <span></span>
+            <select name="order">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <span></span>
+            <small>Filter By</small>
+            <span></span>
+            <select name="filterKey" style="width: auto">
+                <option value="none">None</option>
+                <option value="computer_name">Computer Name</option>
+                <option value="free">Free</option>
+                <option value="used">Used</option>
+                <option value="total">Total</option>
+            </select>
+            <span></span>
+            <select name="filterValue" disabled="disabled">
+
+            </select>
+            <span></span>
         </div>
-    </section>
-</article>
+    <% } %>
+<% } else if (legend) { %>
+    <strong class="span3">Computer Name</strong>
+    <span class="span2">HDD Name</span>
+    <span class="span2">Mount</span>
+    <span class="span2">Free</span>
+    <span class="span2">Used</span>
+    <span class="span1 alignRight">Total</span>
+<% } else { %>
+    <div class="item row-fluid">
+        <span class="span3"><%= model.get('computer-name') %></span>
+        <% if (model.get('disk-usage').length) { %>
+            <% _.each(model.get('disk-usage'), function (disk, index) { %>
+                <% if (index) { %> <span class="span3 noMargin"></span> <% } %>
+                <span class="span2"><%= disk.name %></span>
+                <span class="span2"><%= disk.mount %></span>
+                <span class="span2"><%= viewHelpers.getDriveSize(disk.free) + ' (' + disk.free_percent + '%)' %></span>
+                <span class="span2"><%= viewHelpers.getDriveSize(disk.used) + ' (' + disk.used_percent + '%)' %></span>
+                <span class="span1 alignRight"><%= viewHelpers.getDriveSize(disk.total) %></span>
+            <% }); %>
+        <% } else { %>
+            <span class="span8">No HDD info available</span>
+        <% } %>
+    </div>
+<% } %>

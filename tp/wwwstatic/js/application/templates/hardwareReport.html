@@ -1,77 +1,119 @@
-<article class="row-fluid">
-    <section class="list">
-        <div class="legend row-fluid">
-            <strong class="span2">Computer Name</strong>
-            <span class="span2">Component</span>
-            <span class="span2">Name</span>
-            <span class="span1">Size</span>
-            <span class="span2">File System/Cores</span>
-            <span class="span2">Speed (Mhz)/Free size</span>
-            <span class="span1">Arch</span>
+<% if (header) { %>
+    <% if (left) { %>
+        <small>Search By</small>
+        <span></span>
+        <select name="advancedSearch" class="width-auto">
+            <option value="computer_name">Computer Name</option>
+            <option value="HDD">HDD</option>
+            <option value="CPU">CPU</option>
+            <option value="RAM">RAM</option>
+            <option value="Display">Display</option>
+        </select>
+        <span></span>
+        <div id="searchString" style="display: inline">
+            <div class="input-prepend noMargin">
+                <span class="add-on">
+                <i class="icon-search"></i>
+                </span>
+                <input class="input-small width-auto" type="text" name="search" data-type="computer_name" placeholder="Search By Computer Name">
+            </div>
         </div>
-        <div class="items">
-            <% if (models.length) { %>
-                <% _.each(models, function (model) { %>
-                    <div class="item">
-                        <span class="span2"><%= model.get('computer-name') %></span>
-						<span class="span2">Disk</span>
-                        <% if (model.get('disk').length) { %>
-                            <% _.each(model.get('disk'), function (disk, index) { %>
-								<% if (index) { %>
-									<span class="span4 noMargin"></span>
-								<% } %>
-                                <span class="span2"><%= disk.name %></span>
-                                <span class="span1"><%= helpers.getDriveSize(disk.size_kb)  %></span>
-                                <span class="span2"><%= disk.file_system %></span>
-                                <span class="span2"><%= helpers.getDriveSize(disk.free_size_kb)  %></span>
-                            <% }); %>
-                        <% } else { %>
-                            <span class="span7">No Disk info available</span>
-                        <% } %>
-                        <hr class="span12 noMargin"/>
-						<span class="span2 noMargin"></span>
-						<span class="span2">CPU</span>
-						<% if (model.get('cpu').length) { %>
-							<% _.each(model.get('cpu'), function (cpu, index) { %>
-								<% if (index) { %>
-									<span class="span4 noMargin"></span>
-								<% } %>
-							    <span class="span2"><%= cpu.name %></span>
-								<span class="span1"><%= cpu.cache_kb + ' kb'  %></span>
-								<span class="span2"><%= cpu.cores  %></span>
-								<span class="span2"><%= cpu.speed_mhz %></span>
-								<span class="span1"><%= cpu.bit_type %></span>	
-							<% }); %>
-						<% } else {  %>
-							<span class="span7">No CPU info available</span>
-						<% } %>
-                        <hr class="span12 noMargin"/>
-						<span class="span2 noMargin"></span>
-						<span class="span2">Display</span>
-						<% if (model.get('display').length) { %>
-							<% _.each(model.get('display'), function (display, index) { %>
-								<% if (index) { %>
-									<span class="span4 noMargin"></span>
-								<% } %>
-							    <span class="span2"><%= display.name %></span>
-								<span class="span1"><%= helpers.getDriveSize(display.ram_kb)  %></span>
-                                <span class="span2"></span>
-								<span class="span2"><%= display.speed_mhz %></span>
-							<% }); %>
-						<% } else {  %>
-							<span class="span7">No CPU info available</span>
-						<% } %>
-                        <hr class="span12 noMargin"/>
-						<span class="span2 noMargin"></span>
-						<span class="span2">RAM</span>
-                        <span class="span2"></span>
-						<span class="span4"><%= helpers.getDriveSize(model.get('ram')) %></span>
-					</div>
-                <% }); %>
-            <% } else { %>
-                <div class="item">No data available</div>
-            <% } %>
-        </div>
-    </section>
-</article>
+    <% } else { %>
+        <div class="pull-right hidden-print">
+            <small>Sort By</small>
+            <span></span>
+            <select name="sort" style="width: auto">
+                <option value="computer_name">Computer Name</option>
+                <option value="HDD">HDD</option>
+                <option value="CPU">CPU</option>
+                <option value="RAM">RAM</option>
+                <option value="Display">Display</option>
+            </select>
+            <span></span>
+            <select name="order">
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+            </select>
+            <span></span>
+            <small>Filter By</small>
+            <span></span>
+            <select name="filterKey" style="width: auto">
+                <option value="none">None</option>
+                <option value="HDD">HDD</option>
+                <option value="CPU">CPU</option>
+                <option value="RAM">RAM</option>
+                <option value="Display">Display</option>
+            </select>
+            <span></span>
+            <select name="filterValue" disabled="disabled">
 
+            </select>
+            <span></span>
+        </div>
+    <% } %>
+<% } else if (legend) { %>
+    <strong class="span2">Computer Name</strong>
+    <span class="span2">Component</span>
+    <span class="span2">Name</span>
+    <span class="span1">Size</span>
+    <span class="span2">File System/Cores</span>
+    <span class="span2">Speed (Mhz)/Free size</span>
+    <span class="span1">Arch</span>
+<% } else { %>
+    <div class="item row-fluid">
+        <span class="span2"><%= model.get('computer_name') %></span>
+        <span class="span2">Storage</span>
+        <% var hardware = model.get('hardware'); %>
+        <% if (hardware.storage.length) { %>
+        <% _.each(hardware.storage, function (storage, index) { %>
+        <% if (index) { %>
+        <span class="span4 noMargin"></span>
+        <% } %>
+        <span class="span2"><%= storage.name %></span>
+        <span class="span1"><%= viewHelpers.getDriveSize(storage.size_kb)  %></span>
+        <span class="span2"><%= storage.file_system %></span>
+        <span class="span2"><%= viewHelpers.getDriveSize(storage.free_size_kb)  %></span>
+        <% }); %>
+        <% } else { %>
+        <span class="span7">No Storage info available</span>
+        <% } %>
+        <hr class="span12 noMargin"/>
+        <span class="span2 noMargin"></span>
+        <span class="span2">CPU</span>
+        <% if (hardware.cpu.length) { %>
+        <% _.each(hardware.cpu, function (cpu, index) { %>
+        <% if (index) { %>
+        <span class="span4 noMargin"></span>
+        <% } %>
+        <span class="span2"><%= cpu.name %></span>
+        <span class="span1"><%= cpu.cache_kb + ' kb'  %></span>
+        <span class="span2"><%= cpu.cores  %></span>
+        <span class="span2"><%= cpu.speed_mhz %></span>
+        <span class="span1"><%= cpu.bit_type %></span>
+        <% }); %>
+        <% } else { %>
+        <span class="span7">No CPU info available</span>
+        <% } %>
+        <hr class="span12 noMargin"/>
+        <span class="span2 noMargin"></span>
+        <span class="span2">Display</span>
+        <% if (hardware.display.length) { %>
+        <% _.each(hardware.display, function (display, index) { %>
+        <% if (index) { %>
+        <span class="span4 noMargin"></span>
+        <% } %>
+        <span class="span2"><%= display.name %></span>
+        <span class="span1"><%= viewHelpers.getDriveSize(display.ram_kb)  %></span>
+        <span class="span2"></span>
+        <span class="span2"><%= display.speed_mhz %></span>
+        <% }); %>
+        <% } else { %>
+        <span class="span7">No CPU info available</span>
+        <% } %>
+        <hr class="span12 noMargin"/>
+        <span class="span2 noMargin"></span>
+        <span class="span2">RAM</span>
+        <span class="span2"></span>
+        <span class="span4"><%= viewHelpers.getDriveSize(hardware.memory) %></span>
+    </div>
+<% } %>
