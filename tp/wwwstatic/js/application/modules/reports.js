@@ -87,7 +87,7 @@ define(
                 debouncedSearch: _.debounce(function (event) {
                     var searchType = $(event.currentTarget).data('type');
                     if(this.prevSearchType !== searchType) {
-                        delete this.pager.collection.params.key[this.prevSearchType];
+                        delete this.pager.collection.params[this.prevSearchType];
                         delete this.pager.collection.params.query;
                         this.prevSearchType = searchType;
                     }
@@ -124,6 +124,9 @@ define(
                         $search.empty();
                         $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'computer_name', placeholder: 'Search By Computer Name'})));
                     }
+
+                    delete this.pager.collection.params.key;
+                    delete this.pager.collection.params.query;
                     this.pager.collection.fetch();
                     return this;
                 },
