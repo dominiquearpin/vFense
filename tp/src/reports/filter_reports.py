@@ -10,6 +10,7 @@ from vFense.core.tag.tagManager import get_agent_ids_from_tag
 
 from vFense.db.client import db_create_close, r
 from vFense.plugins.patching.rv_db_calls import get_all_app_stats_by_agentid
+from vFense.plugins.patching._constants import *
 from vFense.errorz.error_messages import GenericResults
 
 logging.config.fileConfig('/opt/TopPatch/conf/logging.config')
@@ -42,13 +43,13 @@ def get_all_agentids(username, customer_name, count=30, offset=0,
 
         if data:
             print data
-            for agent in data:
-                agent[BASIC_RV_STATS] = (
-                        get_all_app_stats_by_agentid(
-                            username, customer_name,
-                            uri,  method, agent[AgentKey.AgentId]
-                            )['data']
-                        )
+            #for agent in data:
+            #    agent[BASIC_RV_STATS] = (
+            #            get_all_app_stats_by_agentid(
+            #                username, customer_name,
+            #                uri,  method, agent[AgentKey.AgentId]
+            #                )['data']
+            #            )
         status = (
                 GenericResults(
                     username,  uri, method
@@ -353,13 +354,14 @@ def agent_status(agent_info):
         agent_status = agent_info.get('agent_status')
         return(agent_status)
 
-def agents_last_updated(username, customer_name, os_code=None, 
+def agents_last_updated(username, customer_name, agent_os=None, 
         tag_id=None, uri=None, method=None):
 
     agents_uptime_info=[]
-    agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
+    #agentids=get_agentids(os_code=os_code, customer_name=customer_name, tag_id=tag_id)
+    agentids = get_all_agent_ids(customer_name=customer_name, agent_os=agent_os)
     for agentid in agentids:
-        agent_info=get_agent_info(agentid=agentid)
+        agent_info=get_agent_info(agent_id=agentid)
         last_updated=agent_last_updated(agent_info)
         if last_updated:
             agents_uptime_info.append(last_updated)
