@@ -69,21 +69,48 @@ def get_all_agentids(username, customer_name, count=30, offset=0,
 @db_create_close
 def filter_by_and_query(username, customer_name, keys_to_pluck, key = AgentKey.ComputerName,
         count=30, offset=0, query=None, uri=None, method=None, conn=None):
+
+    """
+    filter agent sdats data by passing key and query.
+
+    ARGS
+        username : Name of the logged in user
+        customer_name : Name of the customer
+        keys_to_pluck : List of Keys which need to filtered
+        key : Name of Agent Key
+        query: String to search
+
+    Basic Usage:
+        >>> username ='admin'
+        >>> customer_name = 'default'
+        >>> keys_to_pluck = ['agent_id', 'machine_type', 'agent_status']
+        >>> query='cal'
+        >>> key = 'machine_type'
+        >>> data = list(r.table(AgentsCollection).get_all(customer_name, index=AgentKey.CustomerName)
+        ... .filter(r.row[key].match("(?i)"+query)).pluck(keys_to_pluck).run(conn))
+        >>> data
+        [{u'agent_status': u'up', u'agent_id': u'4ebbe793-f510-4c29-b267-3a43236a125c', u'machine_type': u'physical'}, {u'agent_status': u'down', u'agent_id': u'b2b18ea0-4867-4
+        fab-93be-c64929709e80', u'machine_type': u'physical'}]
+        >>> 
+
+    Returns:
+        Filtered Agent Data by key and query
+        
+        
+    """
     
-    print key
-    print query
     if query:
         count = (
                 r
                .table(AgentsCollection)
                .get_all(customer_name, index=AgentKey.CustomerName)
                .filter(
-                   (r.row[AgentKey.ComputerName].match("(?i)"+query))
+                   (r.row[key].match("(?i)"+query))
                    )
                .count()
                .run(conn)
                )
-
+               
         data = list(
                 r
                 .table(AgentsCollection)
@@ -95,7 +122,8 @@ def filter_by_and_query(username, customer_name, keys_to_pluck, key = AgentKey.C
                 .skip(offset)
                 .limit(count)
                 .run(conn)
-                )
+                )       
+    
     else:
         
         count = (
@@ -119,8 +147,28 @@ def filter_by_and_query(username, customer_name, keys_to_pluck, key = AgentKey.C
 
 
 
-def systems_os_details(username, customer_name, key, query, uri=None, method=None):
+def systems_os_details(username, customer_name, key=None, query=None, uri=None, method=None):
    
+    """
+    Retrieve OS Details of all the Agents as per key and query passed.
+
+    ARGS:
+        username = Name of User
+        customer_name = Name of the customer
+        key = Name of Agent Key
+        query = string to search
+
+    Basic Usage:
+        >>> systems_os_details(username='admin', customer_name = 'default', key = AgentKey.OsString, query = 'Ubu')
+        {'count': 1, 'uri': None, 'rv_status_code': 1001, 'http_method': None, 'http_status': 200, 'message': 'admin - data was retrieved', 'data': [{u'os_string': u'Ubuntu 12.
+        04', u'bit_type': u'64', u'machine_type': u'physical', u'computer_name': u'ubuntu', u'os_code': u'linux'}]}
+
+    Returns:
+        Return the serached data based on passed keys and values
+
+
+    """
+    
     keys_to_pluck = [AgentKey.ComputerName, AgentKey.OsCode, 
             AgentKey.OsString, AgentKey.MachineType, AgentKey.SysArch]
     
@@ -156,7 +204,7 @@ def system_hardware_details(agent_info):
                 } 
         return(data)
 
-def systems_hardware_details (username, customer_name, key, query,  uri=None, method=None):
+def systems_hardware_details (username, customer_name, key=None, query=None,  uri=None, method=None):
 
     keys_to_pluck = [AgentKey.ComputerName, AgentKey.Hardware]
     
