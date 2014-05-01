@@ -85,9 +85,9 @@ define(
                     'click li a'                            : 'switchTab'
                 },
                 debouncedSearch: _.debounce(function (event) {
-                    var searchType = $(event.currentTarget).data('type');
+                    var searchType = $(event.currentTarget).attr('data-type');
                     if(this.prevSearchType !== searchType) {
-                        delete this.pager.collection.params.key[this.prevSearchType];
+                        delete this.pager.collection.params[this.prevSearchType];
                         delete this.pager.collection.params.query;
                         this.prevSearchType = searchType;
                     }
@@ -96,34 +96,17 @@ define(
                     this.pager.collection.fetch();
                 }, 300),
                 filterBySearch: function (event) {
-                    var $header = $('header');
-                    var $search = $header.find('#searchString');
-                    var $selectedElement = $(event.currentTarget).val();
-                    if($selectedElement === 'bit_type')
-                    {
-                        $search.empty();
-                        $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'bit_type', placeholder: 'Search By System Arch'})));
-                    }
-                    else if($selectedElement === 'os_string')
-                    {
-                        $search.empty();
-                        $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'os_string', placeholder: 'Search By OS String'})));
-                    }
-                    else if($selectedElement === 'os_code')
-                    {
-                        $search.empty();
-                        $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'os_code', placeholder: 'Search By OS Code'})));
-                    }
-                    else if($selectedElement === 'machine_type')
-                    {
-                        $search.empty();
-                        $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'machine_type', placeholder: 'Search By Machine Type'})));
-                    }
-                    else
-                    {
-                        $search.empty();
-                        $search.append(crel('div', {class: 'input-prepend noMargin'}, crel('span', {class: 'add-on'}, crel('i', {class: 'icon-search'})), crel('input', {class: 'input-small width-auto', type: 'text', name: 'search', 'data-type': 'computer_name', placeholder: 'Search By Computer Name'})));
-                    }
+                    var $header = $('header'),
+                        $search = $header.find('#searchString'),
+                        $select = $(event.currentTarget),
+                        $selectValue = $select.val(),
+                        $selectText = $select.find(':selected').text();
+
+                    $search.attr('data-type', $selectValue);
+                    $search.attr('placeholder', 'Search By ' + $selectText);
+
+                    delete this.pager.collection.params.key;
+                    delete this.pager.collection.params.query;
                     this.pager.collection.fetch();
                     return this;
                 },
